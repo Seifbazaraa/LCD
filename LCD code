@@ -1,0 +1,92 @@
+#include <LiquidCrystal.h>
+
+// initialize the library by associating any needed LCD interface pin
+// with the arduino pin number it is connected to
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+const int BLED=9; 
+const int GLED=8; 
+const int RLED=10;
+const int buzzer = 6;
+const int TEMP=0;
+int temp=0;
+int x=0;
+const int LOWER_BOUND=123; 
+const int UPPER_BOUND=184; 
+int val = 0; //Variable to hold analog reading
+ void setup() { 
+   
+ lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.print("hello, world!");
+   
+   Serial.begin(9600);
+pinMode (BLED, OUTPUT); //Set Blue LED as Output 
+pinMode (GLED, OUTPUT); //Set Green LED as Output 
+ pinMode (RLED, OUTPUT); //Set Red LED as Output 
+} 
+void loop() { 
+val = analogRead(TEMP);
+//x = (val*5)/1023;
+//temp = x*100-50; 
+  
+
+
+ if (val < LOWER_BOUND) { 
+digitalWrite(RLED, LOW); 
+digitalWrite(GLED, LOW); 
+digitalWrite(BLED, HIGH);
+tone(buzzer,6000);
+   
+     lcd.setCursor(0, 0);
+  lcd.print("temp < 10 (Degrees)");
+  lcd.setCursor(0, 1);
+  lcd.print("Blue  6000Hz");
+   
+   Serial.println("temp < 10 (Degrees)");
+   Serial.println("Blue  6000Hz");
+   Serial.println();
+  delay(500);
+   
+ } 
+else if (val > UPPER_BOUND) { 
+digitalWrite(RLED, HIGH); 
+digitalWrite(GLED, LOW); 
+digitalWrite(BLED, LOW); 
+tone(buzzer,80);
+  
+    lcd.setCursor(0, 0);
+  lcd.print("temp > 40 (Degrees)");
+  lcd.setCursor(0, 1);
+  lcd.print("RED  80Hz");
+  
+  Serial.println("temp > 40 (Degrees)");
+  Serial.println("RED  80Hz");
+  Serial.println();
+  delay(500);
+} 
+else { 
+digitalWrite(RLED, LOW);
+digitalWrite(GLED, HIGH);
+digitalWrite(BLED, LOW);
+noTone(buzzer);
+  
+    lcd.setCursor(0, 0);
+  lcd.print("10 < temp > 40 (Degrees)");
+  lcd.setCursor(0, 1);
+  lcd.print("Green");
+  
+  Serial.println("10 < temp > 40 (Degrees)");
+  Serial.println("Green");
+  Serial.println();
+  delay(500);
+  
+  
+}
+
+
+
+
+} 
